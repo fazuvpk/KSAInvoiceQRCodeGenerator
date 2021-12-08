@@ -1,0 +1,91 @@
+﻿
+@{
+    ViewBag.Title = "KSA QR Generator";
+}
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<h1>QR Generator</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="exampleuser1">Seller Name</label>
+                        <input id="seller-name" name="" autocomplete="off" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="exampleuser1">VAT Number</label>
+                        <input id="vat-number" name="" autocomplete="off" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="exampleuser1">Invoice Date</label>
+                        <input id="time-stamp" name="" autocomplete="off" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="exampleuser1">Invoice Total</label>
+                        <input id="invoice-total" name="" autocomplete="off" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="vat-total">VAT Total</label>
+                        <input id="vat-total" name="" autocomplete="off" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <button type="button" id="btn-gen" class="btn btn-primary">Generate QR Code</button>
+            </div>
+        </div>
+        <div class="col-md-6">
+
+            <div class="row">
+                <span>Base 64 Encoded:</span><span id="txt-base-64"></span>
+            </div>
+            <div class="row">
+                <span>Base 64 Decoded:</span><span id="txt-base-64-decoded"></span>
+            </div>
+            <div class="row" style="margin-top:50px">
+                <img id="qr-code" />
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#btn-gen").click(function () {
+            var dt = {
+                SellerName: $("#seller-name").val(),
+                VATNumber: $("#vat-number").val(),
+                TimeStamp: $("#time-stamp").val(),
+                InvoiceTotal: $("#invoice-total").val(),
+                VATTotal: $("#vat-total").val(),
+            }
+
+
+            $.post('/Home/GetQRCodeWithTag', dt).done(function (response) {
+                console.log(response);
+                $("#qr-code").attr("src", "data:image/png;base64," + response.QRCode);
+                $("#txt-base-64").text(response.Base64Text);
+                $("#txt-base-64-decoded").text(response.DecodedText);
+            });
+        });
+    })
+
+
+</script>
+
